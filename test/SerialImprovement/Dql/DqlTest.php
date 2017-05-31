@@ -25,4 +25,29 @@ class DqlTest extends TestCase
 
         $this->assertSame('Mr. Bill Nunney Esq.', $out);
     }
+
+    public function testInterpret2()
+    {
+        $dql = new Dql();
+
+        $dql->addPattern('SET [int:num]', function (array $args) {
+            return $args['num'];
+        });
+
+        $dql->addPattern('ADD [int:num]', function (array $args) {
+            return $args['num'] + $args['$prev'];
+        });
+
+        $dql->addPattern('SUB [int:num]', function (array $args) {
+            return $args['$prev'] - $args['num'];
+        });
+
+        $dql->addPattern('MUL [int:num]', function (array $args) {
+            return $args['$prev'] * $args['num'];
+        });
+
+        $out = $dql->interpret('SET 0 THEN ADD 1 THEN MUL 5 THEN ADD 2 THEN SUB 1');
+
+        $this->assertSame(6, $out);
+    }
 }

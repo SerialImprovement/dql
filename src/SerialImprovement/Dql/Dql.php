@@ -50,8 +50,6 @@ class Dql
             'commands' => $commands,
             'regex' => $this->buildPatternRegex($commands),
         ];
-
-        print_r($this->patterns);
     }
 
     protected function buildAst(string $pattern)
@@ -89,6 +87,9 @@ class Dql
         switch ($condition['type']) {
             case 'str':
                 $regex .= ' ("(?:[^"\\\]|\\\.)*")';
+                break;
+            case 'int':
+                $regex .= ' ([0-9]+)';
                 break;
         }
 
